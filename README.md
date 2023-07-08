@@ -3,18 +3,18 @@ Simple Chebyshev and Butterworth implementation in C, double precision. Works we
 
 Features
 
-lowpass
-highpass
+ * lowpass
+ * highpass
 
 This imlementation is based on algorithm from [https://exstrom.com/journal/sigproc/dsigproc.html](https://www.analog.com/media/en/technical-documentation/dsp-book/dsp_book_Ch20.pdf)
 
-Run example
+# Run example
 make example
 ./example
 
-Steps to use a filter
-Create a filter object using create_***_pass/stop(params...)
+# Steps to use a filter
+Create a filter object using create_***_pass_filter(params...)
 
-Use filter to filter incoming numbers one by one. The output is a double or float that can be specified in header.
+Use filter to filter incoming doubles one by one. The output is a double.
 
-After using the filter, release the filter using free_***_pass/stop(filter).
+After using the filter, release the filter using free_***_passp(filter).
