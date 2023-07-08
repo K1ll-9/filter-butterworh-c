@@ -169,15 +169,16 @@ ChebFilter* create_che_filter(int NP, double PR, int LH, double FC) {
   for(int i=0; i<20; i++) 
     a[i]=a[i]/gain;
   
-  printf("Order: %d\n", NP);
-  printf("Fc: %lf\n", FC);
-  printf("a0: %lf\n", filter->a0);
-  printf("a1: %lf\n", filter->a1);
-  printf("a2: %lf\n", filter->a2);
-  printf("b1: %lf\n", filter->b1);
-  printf("b2: %lf\n", filter->b2);
+  if(DEBUG) {
+    printf("Order: %d\n", NP);
+    printf("Fc: %lf\n", FC);
+    printf("a0: %lf\n", filter->a0);
+    printf("a1: %lf\n", filter->a1);
+    printf("a2: %lf\n", filter->a2);
+    printf("b1: %lf\n", filter->b1);
+    printf("b2: %lf\n", filter->b2);
+  }
 
-  //filter->X0=0;
   filter->X1=0;
   filter->X2=0;
   filter->Y1=0;
@@ -220,7 +221,6 @@ double applyfilter(ChebFilter* filter, double X0) {
   filter->Y1=Y;
   filter->X2= filter->X1;
   filter->X1= X0;
-  //filter->X0=X0;
 
   return(Y);
 }
