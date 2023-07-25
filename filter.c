@@ -248,11 +248,6 @@ double applyfilter(ChebFilter* filter, double X0) {
     filter->X[i]=filter->X[i-1];
   }
   
-  filter->Y2=filter->Y1;
-  filter->Y1=Y;
-  filter->X2= filter->X1;
-  filter->X1= X0;
-
   return(Y);
 }
 
