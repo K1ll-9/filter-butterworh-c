@@ -14,7 +14,7 @@ http://irphouse.com/ijeee/ijeeev8n1_07.pdf
 
 #include "filter.h"
 
-#define DEBUG  1
+#define DEBUG  0
 
 
 ChebFilter* call_205(int P, ChebFilter* filter, double FC, int NP, int LH, double PR) { 
