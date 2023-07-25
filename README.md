@@ -21,13 +21,13 @@ Create a filter object using create_***_pass_filter(params...)
 
 ``` ChebFilter* filter = create_bw_low_pass_filter(ORDER, FC); ```
 
-If fc is the cut-off frequency in hertz, the filter cut-off frequency must be expressed by PI*fc/framerate. FC should be included in the [0, 0.5] range.
+If fc is the cut-off frequency in hertz, the filter cut-off frequency must be expressed by fc/framerate. FC should be included in the [0, 0.5] range, 0.5 matching the Nyquist frequency.
 
-```FC=(double)2*M_PI*fc/FR```
+```FC=(double)fc/FR```
 
 For example, with a framerate at 44100Hz and a fc= 200Hz:
 
-```FC=(double)2*M_PI*200/44100```
+```FC=(double)200/44100```
 
 
 

@@ -7,7 +7,7 @@
 #define DEBUG  1
 #define DATA_LEN  1006507 // # frames
 #define RUNS      3
-#define ORDER     4
+#define ORDER     2
 
 
 #include "tinywav.h"
@@ -24,7 +24,7 @@ int main() {
   //ChebFilter* filter = create_bw_low_pass_filter(ORDER, (double)2*M_PI*205/44100);
   //ChebFilter* filter = create_bw_low_pass_filter(ORDER, (double)FC/SAMPLE_RATE);
   //ChebFilter* filter = create_bw_low_pass_filter(ORDER, 0.01);
-  ChebFilter* filter = create_che_filter(ORDER, 0.5, 0, 0.025);
+  ChebFilter* filter = create_che_filter(ORDER, 0.5, 0, 0.01);
   double      input[DATA_LEN];
   //double      filtered_signal[RUNS][DATA_LEN];
 

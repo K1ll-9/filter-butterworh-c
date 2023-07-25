@@ -129,8 +129,15 @@ ChebFilter* create_che_filter(int NP, double PR, int LH, double FC) {
   a[2]=1;
   b[2]=1;
 
+  for(int i=0; i<22; i++) {
+    filter->a[i]=a[i];
+    filter->b[i]=b[i];
+  }
 
-  for(int p=0; p<NP/2; p++) {
+  filter->NP=NP;
+
+
+  for(int p=1; p<=NP/2; p++) {
     filter=call_205(p, filter, FC, NP, LH, PR);
 
     for(int i=0; i<22; i++) {
@@ -168,6 +175,11 @@ ChebFilter* create_che_filter(int NP, double PR, int LH, double FC) {
 
   for(int i=0; i<20; i++) 
     a[i]=a[i]/gain;
+
+  for(int i=0; i<20; i++) {
+    filter->a[i]=a[i];
+    filter->b[i]=b[i];
+  }
   
   if(DEBUG) {
     printf("Order: %d\n", NP);
@@ -191,10 +203,10 @@ ChebFilter* create_che_filter(int NP, double PR, int LH, double FC) {
     printf("]\n");
   }
 
-  filter->X1=0;
-  filter->X2=0;
-  filter->Y1=0;
-  filter->Y2=0;
+  for(int i=0; i<20; i++) {
+    filter->X[i]=0;
+    filter->Y[i]=0;
+  }
 
   return(filter);
 }
@@ -217,16 +229,23 @@ ChebFilter* create_che_high_pass_filter(int NP, double FC, double PR) {
 
 double applyfilter(ChebFilter* filter, double X0) {
 
-  double Y= filter->a0*X0 + filter->a1*filter->X1 + filter->a2*filter->X2 + filter->b1*filter->Y1 + filter->b2*filter->Y2;
+  filter->X[0]=X0;
+  double Y=0;
+  for(int i=0; i<=filter->NP; i++) 
+    Y= filter->a[i]*filter->X[i] + filter->b[i]*filter->Y[i];
 
+  filter->Y[0]=Y;
   if(DEBUG) {
     printf("\n[bw_low_pass]\n");
-    printf("X0: %.10lf\n", X0);
-    printf("X1: %.10lf\n", filter->X1);
-    printf("X2: %.10lf\n", filter->X2);
-    printf("Y0: %.10lf\n", Y);
-    printf("Y1: %.10lf\n", filter->Y1);
-    printf("Y2: %.10lf\n\n", filter->Y2);
+    for(int i=0; i<=filter->NP; i++) 
+      printf("X[%d]: %.10lf\n", i, filter->X[i]);
+    for(int i=0; i<=filter->NP; i++) 
+      printf("Y[%d]: %.10lf\n", i, filter->Y[i]);
+  }
+   
+  for(int i=filter->NP; i>0; i--) {
+    filter->Y[i]=filter->Y[i-1];
+    filter->X[i]=filter->X[i-1];
   }
   
   filter->Y2=filter->Y1;
