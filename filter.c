@@ -14,7 +14,7 @@ http://irphouse.com/ijeee/ijeeev8n1_07.pdf
 
 #include "filter.h"
 
-#define DEBUG  0
+#define DEBUG  1
 
 
 ChebFilter* call_205(int P, ChebFilter* filter, double FC, int NP, int LH, double PR) { 
@@ -177,6 +177,18 @@ ChebFilter* create_che_filter(int NP, double PR, int LH, double FC) {
     printf("a2: %lf\n", filter->a2);
     printf("b1: %lf\n", filter->b1);
     printf("b2: %lf\n", filter->b2);
+
+    printf("a= [");
+    for(int i=0; i<20; i++) {
+      printf("%.10e ", a[i]);
+    }
+    printf("]\n");
+
+    printf("b= [");
+    for(int i=0; i<20; i++) {
+      printf("%.10e ", b[i]);
+    }
+    printf("]\n");
   }
 
   filter->X1=0;
