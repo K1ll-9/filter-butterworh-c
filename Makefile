@@ -15,4 +15,4 @@ filter.o:
 	$(CC) $(CFLAGS) -c filter.c
 
 clean:
-	\rm *.o example
+	\rm *.o lpbutter_wav

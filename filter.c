@@ -22,7 +22,7 @@ ChebFilter* call_205(int P, ChebFilter* filter, double FC, int NP, int LH, doubl
   double rp= -cos(M_PI/(NP*2) + (P-1)*M_PI/NP);
   double ip=  sin(M_PI/(NP*2) + (P-1)*M_PI/NP);
 
-  if(DEBUG) {
+  if(DEBUG>1) {
     printf("\n[call_205 #%d] rp= %.10lf\n", P, rp);
     printf("[call_205 #%d] ip= %.10lf\n", P, ip);
     printf("\n");
@@ -35,7 +35,7 @@ ChebFilter* call_205(int P, ChebFilter* filter, double FC, int NP, int LH, doubl
           kx= (exp(kx) + exp(-kx))/2;
           rp= rp * ((exp(vx) - exp(-vx))/2.0)/kx;
           ip= ip * ((exp(vx) + exp(-vx))/2.0)/kx;
-    if(DEBUG) {
+    if(DEBUG>1) {
       printf("[call_205 #%d PR!=0] rp= %.10lf\n", P, rp);
       printf("[call_205 #%d PR!=0] ip= %.10lf\n", P, ip);
       printf("[call_205 #%d PR!=0] es= %.10lf\n", P, es);
@@ -54,7 +54,7 @@ ChebFilter* call_205(int P, ChebFilter* filter, double FC, int NP, int LH, doubl
   double y1=(8 - 2*m*pow(t,2))/d;
   double y2=(-4 - 4*rp*t - m*pow(t,2))/d;
 
-  if(DEBUG) {
+  if(DEBUG>1) {
     printf("[call_205 #%d] t= %.10lf\n", P, t);
     printf("[call_205 #%d] w= %.10lf\n", P, w);
     printf("[call_205 #%d] m= %.10lf\n", P, m);
@@ -74,7 +74,7 @@ ChebFilter* call_205(int P, ChebFilter* filter, double FC, int NP, int LH, doubl
   if(LH==0) {
     k=  sin((double)1/2 - w/2)/sin((double)1/2 + w/2);
   }
-  if(DEBUG) printf("[call_205 #%d] k= %.10lf\n", P, k); 
+  if(DEBUG>1) printf("[call_205 #%d] k= %.10lf\n", P, k); 
 
   d= 1 + y1*k - y2*pow(k, 2);
   filter->a0= (x0 - x1*k + x2*pow(k,2))/d;
@@ -83,7 +83,7 @@ ChebFilter* call_205(int P, ChebFilter* filter, double FC, int NP, int LH, doubl
   filter->b1= (2*k + y1 + y1*pow(k,2) - 2*y2*k)/d;
   filter->b2= (-pow(k,2) - y1*k +y2)/d;
 
-  if(DEBUG) {
+  if(DEBUG>1) {
     printf("[call_205 #%d] d= %.10lf\n", P, d);
     printf("[call_205 #%d] a0= %.10lf\n", P, filter->a0);
     printf("[call_205 #%d] a1= %.10lf\n", P, filter->a1);
@@ -96,7 +96,7 @@ ChebFilter* call_205(int P, ChebFilter* filter, double FC, int NP, int LH, doubl
     filter->b1=-filter->b1;
   }
 
-  if(DEBUG) {
+  if(DEBUG>1) {
     printf("[call_205 #%d] a1= %.10lf\n", P, filter->a1);
     printf("[call_205 #%d] b1= %.10lf\n", P, filter->b1);
   }
@@ -181,7 +181,7 @@ ChebFilter* create_che_filter(int NP, double PR, int LH, double FC) {
     filter->b[i]=b[i];
   }
   
-  if(DEBUG) {
+  if(DEBUG>0) {
     printf("Order: %d\n", NP);
     printf("Fc: %lf\n", FC);
     printf("a0: %lf\n", filter->a0);
@@ -191,14 +191,16 @@ ChebFilter* create_che_filter(int NP, double PR, int LH, double FC) {
     printf("b2: %lf\n", filter->b2);
 
     printf("a= [");
-    for(int i=0; i<20; i++) {
-      printf("%.10e ", a[i]);
+    for(int i=0; i<=NP; i++) {
+      //printf("%.10e ", a[i]);
+      printf("%.10lf ", a[i]);
     }
     printf("]\n");
 
     printf("b= [");
-    for(int i=0; i<20; i++) {
-      printf("%.10e ", b[i]);
+    for(int i=0; i<=NP; i++) {
+      //printf("%.10e ", b[i]);
+      printf("%.10lf ", b[i]);
     }
     printf("]\n");
   }
@@ -232,7 +234,7 @@ double applyfilter(ChebFilter* filter, double X0) {
   filter->X[0]=X0;
   double Y=0;
   for(int i=0; i<=filter->NP; i++) 
-    Y= filter->a[i]*filter->X[i] + filter->b[i]*filter->Y[i];
+    Y+= filter->a[i]*filter->X[i] + filter->b[i]*filter->Y[i];
 
   filter->Y[0]=Y;
   if(DEBUG) {
@@ -241,6 +243,8 @@ double applyfilter(ChebFilter* filter, double X0) {
       printf("X[%d]: %.10lf\n", i, filter->X[i]);
     for(int i=0; i<=filter->NP; i++) 
       printf("Y[%d]: %.10lf\n", i, filter->Y[i]);
+
+    printf("X: %.6lf - Y: %.6lf\n", X0, Y);
   }
    
   for(int i=filter->NP; i>0; i--) {
