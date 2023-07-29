@@ -213,13 +213,48 @@ ChebFilter* create_che_filter(int NP, double PR, int LH, double FC) {
   return(filter);
 }
 
-ChebFilter* create_bw_low_pass_filter(int NP, double FC) {
-  return(create_che_filter(NP, 0, 0, FC));
+dChebFilter* create_bw_low_pass_filter(int NP, double FC) {
+  dChebFilter *filter=(dChebFilter*)malloc(sizeof(dChebFilter));
+
+  filter->type=0;
+  filter->lp_filter=create_che_filter(NP, 0, 0, FC);
+  filter->hp_filter=NULL;
+
+  return(filter);
 }
 
-ChebFilter* create_bw_high_pass_filter(int NP, double FC) {
-  return(create_che_filter(NP, 0, 1, FC));
+dChebFilter* create_bw_high_pass_filter(int NP, double FC) {
+  dChebFilter *filter=(dChebFilter*)malloc(sizeof(dChebFilter));
+
+  filter->type=1;
+  filter->lp_filter=NULL;
+  filter->hp_filter=create_che_filter(NP, 0, 1, FC);
+
+  return(filter);
 }
+
+dChebFilter* create_bw_bp_pass_filter(int NP, double FC, double winwidth) {
+  dChebFilter *filter=(dChebFilter*)malloc(sizeof(dChebFilter));
+
+  filter->type=2;
+  filter->lp_filter=create_che_filter(NP, 0, 0, FC*(1.0+fabsl(winwidth)));
+  filter->hp_filter=create_che_filter(NP, 0, 1, FC*(1.0-fabsl(winwidth)));
+
+  return(filter);
+}
+
+double applydfilter(dChebFilter* filter, double X0) {
+  double output=X0;
+
+  if(filter->lp_filter!=NULL)
+    output=applyfilter(filter->lp_filter, output);
+
+  if(filter->hp_filter!=NULL)
+    output=applyfilter(filter->hp_filter, output);
+
+  return(output);
+}
+
 
 ChebFilter* create_che_low_pass_filter(int NP, double FC, double PR) {
   return(create_che_filter(NP, PR, 0, FC));
